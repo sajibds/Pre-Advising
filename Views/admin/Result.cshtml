@@ -1,0 +1,62 @@
+﻿@model project.ViewModel.TakeView
+
+@{
+    ViewBag.Title = "Result";
+}
+
+<h2>Result</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Add Result</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Taken_Courses.student_id, "student_id", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Taken_Courses.student_id, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Taken_Courses.student_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Taken_Courses.course_id, "course_id", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model=>model.Taken_Courses.course_id,new SelectList(Model.Courses, "course_code", "course_name"),"Select course", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Taken_Courses.course_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Taken_Courses.result, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Taken_Courses.result, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Taken_Courses.result, "", new { @class = "text-danger" })
+            </div>
+        </div>.
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Taken_Courses.semester, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Taken_Courses.semester, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Taken_Courses.semester, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        
+        
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

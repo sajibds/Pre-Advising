@@ -1,0 +1,28 @@
+﻿
+@{
+                /**/
+
+                ViewBag.Title = "AdminDash";
+}
+
+@{
+    if (Session["admin"] != null)
+    {
+        <h2>Admin Dashboard</h2>
+
+
+        using (Html.BeginForm("logout", "admin"))
+        {
+            <input type="button" value="Add result" class="btn btn-default" onclick="location.href='@Url.Action("Result", "admin") '" />
+            <input type="button" value="Add Semester" class="btn btn-default" onclick="location.href='@Url.Action("Semi", "admin") '" />
+            <input type="button" value="Add Course" class="btn btn-default" onclick="location.href='@Url.Action("Add", "admin")'" />
+            <input type="button" value="View students" class="btn btn-default" onclick="location.href='@Url.Action("Select", "admin") '" />
+            <input type="submit" value="Logout" class="btn btn-default" />
+        }
+
+    }
+    else
+    {
+        Response.Redirect("~/admin/login");
+    }
+}

@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "View students";
+}
+
+<h2>Select</h2>
+<div>
+    <label>Seclect semester</label>
+    <select>
+        <option>1st Semester</option>
+        <option>2nd Semester</option>
+        <option>3rd Semester</option>
+        <option>4th Semester</option>
+        <option>5th Semester</option>
+        <option>6th Semester</option>
+        <option>7th Semester</option>
+        <option>8th Semester</option>
+        <option>9th Semester</option>
+        <option>10th Semester</option>
+        <option>11th Semester</option>
+        <option>12tth Semester</option>
+    </select>
+</div>
+<div>
+    <label>Select Section</label>
+    <select>
+        <option>Section A</option>
+        <option>Section B</option>
+        <option>Section C</option>
+        <option>Section D</option>
+    </select>
+</div>
+<div>
+   
+    <input type="button" value="Show students" class="btn btn-default" onclick="location.href='@Url.Action("Show_students", "admin") '" />
+</div>
+
+
