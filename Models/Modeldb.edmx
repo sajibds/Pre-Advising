@@ -1,0 +1,312 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="projectprtModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="assined">
+          <Key>
+            <PropertyRef Name="tid" />
+          </Key>
+          <Property Name="tid" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="tname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="course_code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="section" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="course">
+          <Key>
+            <PropertyRef Name="course_code" />
+          </Key>
+          <Property Name="course_code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="course_name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="course_sl" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'projectprt.dbo.semester' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="semester">
+          <Key>
+            <PropertyRef Name="semester_name" />
+          </Key>
+          <Property Name="semester_name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="student_id" />
+          </Key>
+          <Property Name="student_id" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="student_name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="isverified" Type="bit" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'projectprt.dbo.taken_courses' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="taken_courses">
+          <Key>
+            <PropertyRef Name="student_id" />
+            <PropertyRef Name="course_id" />
+            <PropertyRef Name="result" />
+          </Key>
+          <Property Name="student_id" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="course_id" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="result" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="section" Type="nchar" MaxLength="10" />
+          <Property Name="semester" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_assined_course">
+          <End Role="course" Type="Self.course" Multiplicity="1" />
+          <End Role="assined" Type="Self.assined" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="course">
+              <PropertyRef Name="course_code" />
+            </Principal>
+            <Dependent Role="assined">
+              <PropertyRef Name="course_code" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_taken_courses_course">
+          <End Role="course" Type="Self.course" Multiplicity="1" />
+          <End Role="taken_courses" Type="Self.taken_courses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="course">
+              <PropertyRef Name="course_code" />
+            </Principal>
+            <Dependent Role="taken_courses">
+              <PropertyRef Name="course_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_taken_courses_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="taken_courses" Type="Self.taken_courses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="student_id" />
+            </Principal>
+            <Dependent Role="taken_courses">
+              <PropertyRef Name="student_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="projectprtModelStoreContainer">
+          <EntitySet Name="assined" EntityType="Self.assined" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="course" EntityType="Self.course" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="semester" EntityType="Self.semester" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [semester].[semester_name] AS [semester_name]
+    FROM [dbo].[semester] AS [semester]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="taken_courses" EntityType="Self.taken_courses" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [taken_courses].[student_id] AS [student_id], 
+    [taken_courses].[course_id] AS [course_id], 
+    [taken_courses].[result] AS [result], 
+    [taken_courses].[section] AS [section], 
+    [taken_courses].[semester] AS [semester]
+    FROM [dbo].[taken_courses] AS [taken_courses]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_assined_course" Association="Self.FK_assined_course">
+            <End Role="course" EntitySet="course" />
+            <End Role="assined" EntitySet="assined" />
+          </AssociationSet>
+          <AssociationSet Name="FK_taken_courses_course" Association="Self.FK_taken_courses_course">
+            <End Role="course" EntitySet="course" />
+            <End Role="taken_courses" EntitySet="taken_courses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_taken_courses_Student" Association="Self.FK_taken_courses_Student">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="taken_courses" EntitySet="taken_courses" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="projectprtModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="assined">
+          <Key>
+            <PropertyRef Name="tid" />
+          </Key>
+          <Property Name="tid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="tname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="course_code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="section" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="course" Relationship="Self.FK_assined_course" FromRole="assined" ToRole="course" />
+        </EntityType>
+        <EntityType Name="course">
+          <Key>
+            <PropertyRef Name="course_code" />
+          </Key>
+          <Property Name="course_code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="course_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="course_sl" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="assineds" Relationship="Self.FK_assined_course" FromRole="course" ToRole="assined" />
+          <NavigationProperty Name="taken_courses" Relationship="Self.FK_taken_courses_course" FromRole="course" ToRole="taken_courses" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="student_id" />
+          </Key>
+          <Property Name="student_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="student_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="isverified" Type="Boolean" />
+          <NavigationProperty Name="taken_courses" Relationship="Self.FK_taken_courses_Student" FromRole="Student" ToRole="taken_courses" />
+        </EntityType>
+        <EntityType Name="semester">
+          <Key>
+            <PropertyRef Name="semester_name" />
+          </Key>
+          <Property Name="semester_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="taken_courses">
+          <Key>
+            <PropertyRef Name="student_id" />
+            <PropertyRef Name="course_id" />
+            <PropertyRef Name="result" />
+          </Key>
+          <Property Name="student_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="course_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="result" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="section" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="semester" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="course" Relationship="Self.FK_taken_courses_course" FromRole="taken_courses" ToRole="course" />
+          <NavigationProperty Name="Student" Relationship="Self.FK_taken_courses_Student" FromRole="taken_courses" ToRole="Student" />
+        </EntityType>
+        <Association Name="FK_assined_course">
+          <End Role="course" Type="Self.course" Multiplicity="1" />
+          <End Role="assined" Type="Self.assined" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="course">
+              <PropertyRef Name="course_code" />
+            </Principal>
+            <Dependent Role="assined">
+              <PropertyRef Name="course_code" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_taken_courses_course">
+          <End Role="course" Type="Self.course" Multiplicity="1" />
+          <End Role="taken_courses" Type="Self.taken_courses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="course">
+              <PropertyRef Name="course_code" />
+            </Principal>
+            <Dependent Role="taken_courses">
+              <PropertyRef Name="course_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_taken_courses_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="taken_courses" Type="Self.taken_courses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="student_id" />
+            </Principal>
+            <Dependent Role="taken_courses">
+              <PropertyRef Name="student_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="projectprtEntities5" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="assineds" EntityType="Self.assined" />
+          <EntitySet Name="courses" EntityType="Self.course" />
+          <EntitySet Name="Students" EntityType="Self.Student" />
+          <EntitySet Name="semesters" EntityType="Self.semester" />
+          <EntitySet Name="taken_courses" EntityType="Self.taken_courses" />
+          <AssociationSet Name="FK_assined_course" Association="Self.FK_assined_course">
+            <End Role="course" EntitySet="courses" />
+            <End Role="assined" EntitySet="assineds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_taken_courses_course" Association="Self.FK_taken_courses_course">
+            <End Role="course" EntitySet="courses" />
+            <End Role="taken_courses" EntitySet="taken_courses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_taken_courses_Student" Association="Self.FK_taken_courses_Student">
+            <End Role="Student" EntitySet="Students" />
+            <End Role="taken_courses" EntitySet="taken_courses" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="projectprtModelStoreContainer" CdmEntityContainer="projectprtEntities5">
+          <EntitySetMapping Name="assineds">
+            <EntityTypeMapping TypeName="projectprtModel.assined">
+              <MappingFragment StoreEntitySet="assined">
+                <ScalarProperty Name="tid" ColumnName="tid" />
+                <ScalarProperty Name="tname" ColumnName="tname" />
+                <ScalarProperty Name="course_code" ColumnName="course_code" />
+                <ScalarProperty Name="section" ColumnName="section" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="courses">
+            <EntityTypeMapping TypeName="projectprtModel.course">
+              <MappingFragment StoreEntitySet="course">
+                <ScalarProperty Name="course_code" ColumnName="course_code" />
+                <ScalarProperty Name="course_name" ColumnName="course_name" />
+                <ScalarProperty Name="course_sl" ColumnName="course_sl" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Students">
+            <EntityTypeMapping TypeName="projectprtModel.Student">
+              <MappingFragment StoreEntitySet="Student">
+                <ScalarProperty Name="student_id" ColumnName="student_id" />
+                <ScalarProperty Name="student_name" ColumnName="student_name" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="isverified" ColumnName="isverified" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="semesters">
+            <EntityTypeMapping TypeName="projectprtModel.semester">
+              <MappingFragment StoreEntitySet="semester">
+                <ScalarProperty Name="semester_name" ColumnName="semester_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="taken_courses">
+            <EntityTypeMapping TypeName="projectprtModel.taken_courses">
+              <MappingFragment StoreEntitySet="taken_courses">
+                <ScalarProperty Name="student_id" ColumnName="student_id" />
+                <ScalarProperty Name="course_id" ColumnName="course_id" />
+                <ScalarProperty Name="result" ColumnName="result" />
+                <ScalarProperty Name="section" ColumnName="section" />
+                <ScalarProperty Name="semester" ColumnName="semester" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
